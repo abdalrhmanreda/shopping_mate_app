@@ -13,26 +13,27 @@ class ShopMateLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopMateCubit, ShopMateStates>(
-        listener: (context , state){} ,
-        builder:(context, state)
-    {
+      listener: (context, state) {},
+      builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title:const Text(
-              'Shopping Mate'  ,
+            title: const Text(
+              'Shopping Mate',
               style: TextStyle(
-                color: Color(0xffff7e54) ,
-                fontWeight: FontWeight.bold ,
+                color: Color(0xffff7e54),
+                fontWeight: FontWeight.bold,
               ),
-            ) ,
+            ),
             actions: [
               IconButton(
-                onPressed: ()
-                {
+                onPressed: () {
                   NavigatTo(context, SearchScreen());
                 },
-                icon: const Icon(Iconsax.search_normal , color: Color(0xffff7e54) ,),
-              ) ,
+                icon: const Icon(
+                  Iconsax.search_normal,
+                  color: Color(0xffff7e54),
+                ),
+              ),
             ],
           ),
           bottomNavigationBar: CustomNavigationBar(
@@ -41,16 +42,14 @@ class ShopMateLayout extends StatelessWidget {
             selectedColor: const Color(0xffff7e54),
             currentIndex: ShopMateCubit.get(context).currentIndex,
             elevation: 0,
-            onTap: (index)
-            {
-              ShopMateCubit.get(context).ChangeNavIndex(index) ;
+            onTap: (index) {
+              ShopMateCubit.get(context).changeNavIndex(index);
             },
-
           ),
-          body: ShopMateCubit.get(context).screens[ShopMateCubit.get(context).currentIndex],
-
-        ) ;
-    },
+          body: ShopMateCubit.get(context)
+              .screens[ShopMateCubit.get(context).currentIndex],
+        );
+      },
     );
   }
 }

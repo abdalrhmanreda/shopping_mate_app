@@ -1,5 +1,4 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -10,6 +9,7 @@ import 'package:shop_app_first/moduls/layout/shop_mate_cubit/state.dart';
 import 'package:shop_app_first/moduls/product_screen/product_screen.dart';
 import 'package:shop_app_first/moduls/profile/profile_screen.dart';
 import 'package:shop_app_first/moduls/settings_screen/settings_screen.dart';
+
 import '../../../models/proudt_mode;/product_model.dart';
 import '../../../network/remote/dio_helper.dart';
 import '../../../shared/components/constant.dart';
@@ -22,7 +22,7 @@ class ShopMateCubit extends Cubit<ShopMateStates> {
   List<Widget> screens = [
     ProductScreen(),
     const FavouriteScreen(),
-    InCartScreen(),
+    const InCartScreen(),
     ProfileScreen(),
   ];
   List<CustomNavigationBarItem> items = [
@@ -42,7 +42,7 @@ class ShopMateCubit extends Cubit<ShopMateStates> {
 
   int currentIndex = 0;
 
-  void ChangeNavIndex(int index) {
+  void changeNavIndex(int index) {
     currentIndex = index;
     emit(ChangeNavIndexState());
   }
@@ -53,41 +53,41 @@ class ShopMateCubit extends Cubit<ShopMateStates> {
 
   void getHomeData() {
     emit(GetHomeDataLoadingState());
-    DioHelper.GetData(url: HOME,token: token)!.then((value) {
+    DioHelper.GetData(url: HOME, token: token)!.then((value) {
+      print('-------------------------------------');
+      print(value.data);
+      print('-------------------------------------');
       homeModel = HomeModel.formjson(value.data);
-      homeModel!.data!.products.forEach((element)
-      {
-        favoriteMap.addAll({element.id!:element.in_favorites!});
-      }) ;
-      print(favoriteMap) ;
+      homeModel!.data!.products.forEach((element) {
+        favoriteMap.addAll({element.id!: element.in_favorites!});
+      });
+      print(favoriteMap);
       emit(GetHomeDataSuccessState());
     }).catchError((error) {
+      print(error.toString());
       emit(GetHomeDataErrorState());
     });
   }
 
-  ChangeFavoriteModel ?changeFavoriteModel ; 
+  ChangeFavoriteModel? changeFavoriteModel;
   void changeFavorite(int productId) {
-       favoriteMap[productId] =!favoriteMap[productId]! ;
-       emit(ChangeFavoriteSuccessBeforeState()) ;
+    favoriteMap[productId] = !favoriteMap[productId]!;
+    emit(ChangeFavoriteSuccessBeforeState());
 
     DioHelper.PostData(
             url: FAVOURITE, data: {'product_id': productId}, token: token)
         .then((value) {
-          changeFavoriteModel = ChangeFavoriteModel.fromjson(value.data);
-          if(!changeFavoriteModel!.status!)
-          {
-            favoriteMap[productId] =!favoriteMap[productId]! ;
-
-          }else{
-            getFavoriteData() ;
-          }
+      changeFavoriteModel = ChangeFavoriteModel.fromjson(value.data);
+      if (!changeFavoriteModel!.status!) {
+        favoriteMap[productId] = !favoriteMap[productId]!;
+      } else {
+        getFavoriteData();
+      }
       emit(ChangeFavoriteSuccessState());
     }).catchError((error) {
       emit(ChangeFavoriteErrorState());
     });
   }
-
 
   FavoriteModel? favoriteModel;
 
@@ -101,8 +101,6 @@ class ShopMateCubit extends Cubit<ShopMateStates> {
     });
   }
 
-
-
   UserModel? userData;
   void getDataUserData() {
     emit(GetDataUserLoadingState());
@@ -114,19 +112,14 @@ class ShopMateCubit extends Cubit<ShopMateStates> {
     });
   }
 
-
-  int inCart = 0 ;
-  void inCartChangedIncrease()
-  {
-    inCart++ ;
-    emit(InCartIncreaseChangeState()) ;
+  int inCart = 0;
+  void inCartChangedIncrease() {
+    inCart++;
+    emit(InCartIncreaseChangeState());
   }
 
-  void inCartChangedDecrease()
-  {
-    inCart-- ;
-    emit(InCartDecreaseChangeState()) ;
+  void inCartChangedDecrease() {
+    inCart--;
+    emit(InCartDecreaseChangeState());
   }
-
-
 }
