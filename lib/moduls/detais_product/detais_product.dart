@@ -1,13 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shop_app_first/moduls/layout/shop_mate_cubit/state.dart';
+import 'package:shop_app_first/payment/toggle_screen.dart';
+import 'package:shop_app_first/shared/components/components.dart';
+import 'package:shop_app_first/shared/payment/payment_cubit.dart';
 import 'package:shop_app_first/shared/style/colors.dart';
-import 'dart:math';
 
-import '../../shared/asset_images.dart';
 import '../layout/shop_mate_cubit/cubit.dart';
 
 class ProductDetails extends StatelessWidget {
@@ -57,8 +56,8 @@ class ProductDetails extends StatelessWidget {
               ),
               flexibleSpace: Padding(
                 padding: const EdgeInsets.only(top: 78, bottom: 35),
-                child: CachedNetworkImage(
-                  imageUrl: image,
+                child: Image.network(
+                  image,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -97,8 +96,8 @@ class ProductDetails extends StatelessWidget {
                     width: 150,
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(primaryColor)) , 
-                      borderRadius: BorderRadius.circular(15) ,
+                      border: Border.all(color: Color(primaryColor)),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Text(
                       'Description',
@@ -170,15 +169,20 @@ class ProductDetails extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               color: Color(primaryColor)),
-                          child: const Icon(
-                            Iconsax.shopping_cart,
-                            color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              PaymentCubit.get(context).orderRegister();
+                              NavigatTo(context, ToggleScreen());
+                            },
+                            child: const Icon(
+                              Iconsax.shopping_cart,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
